@@ -6,10 +6,10 @@ import time
 with open('counter.json', 'r') as file:
     config = json.load(file)
 
-counterMac = config['counterMac']
-counterToken = config['counterToken']
-numberToShow = config['numberToShow']
-increase_amount = config['increase_amount']
+counterMac = e08e3c332414
+counterToken = 9185aaf9c581a93dbe8bb3867973d697
+numberToShow = 204960
+increase_amount = 10
 delay_minutes = config['delay_minutes']
 
 def push_number_to_smiirl(number):
