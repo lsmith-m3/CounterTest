@@ -1,33 +1,38 @@
 import json
+import urllib.request
 import time
 
-# Path to the JSON file
-json_file_path = 'counter.json'
+# Load configuration from JSON file
+with open('config.json', 'r') as file:
+    config = json.load(file)
 
-# Function to read the current number from the JSON file
-def read_current_number():
-    with open(json_file_path, 'r') as file:
-        data = json.load(file)
-        return data['current_number']
+counterMac = config['counterMac']
+counterToken = config['counterToken']
+numberToShow = config['numberToShow']
+increase_amount = config['increase_amount']
+delay_minutes = config['delay_minutes']
 
-# Function to update the number in the JSON file
-def update_number_in_json(new_number):
-    with open(json_file_path, 'w') as file:
-        json.dump({"current_number": new_number}, file)
+def push_number_to_smiirl(number):
+    url = f"http://api.smiirl.com/{counterMac}/set-number/{counterToken}/{number}"
+    try:
+        req = urllib.request.Request(url)
+        r = urllib.request.urlopen(req).read()
+        cont = json.loads(r.decode('utf-8'))
+        
+        if 'status' in cont and cont['status'] == 200:
+            print(f"Number {number} successfully pushed to Smiirl counter.")
+            return True
+        else:
+            print(f"Failed to push number {number}. Status: {cont['status']}")
+            return False
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return False
 
-# Infinite loop to increment the number every 30 seconds
+# Loop to update numberToShow every 5 minutes
 while True:
-    # Read the current number from JSON
-    current_number = read_current_number()
-    
-    # Increase the number by 10
-    new_number = current_number + 10
-    
-    # Print the new number
-    print(f"Updated number: {new_number}")
-    
-    # Update the JSON file with the new number
-    update_number_in_json(new_number)
-    
-    # Wait for 30 seconds before repeating
-    time.sleep(30)
+    success = push_number_to_smiirl(numberToShow)
+    if success:
+        numberToShow += increase_amount
+        print(f"Next number will be {numberToShow}")
+    time.sleep(delay_minutes * 60)
