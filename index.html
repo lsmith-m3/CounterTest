@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counter Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #counter {
+            font-size: 48px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Current Counter Value</h1>
+    <div id="counter">Loading...</div>
+
+    <script>
+        // Function to fetch the current number from counter.json
+        function fetchCounter() {
+            fetch('counter.json')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('counter').textContent = data.current_number;
+                })
+                .catch(error => console.error('Error fetching counter:', error));
+        }
+
+        // Initial fetch when the page loads
+        fetchCounter();
+
+        // Fetch the updated counter every 30 seconds
+        setInterval(fetchCounter, 30000);
+    </script>
+
+</body>
+</html>
