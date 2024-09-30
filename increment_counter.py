@@ -3,7 +3,7 @@ import urllib.request
 import time
 
 # Load configuration from JSON file
-with open('config.json', 'r') as file:
+with open('counter.json', 'r') as file:
     config = json.load(file)
 
 counterMac = config['counterMac']
